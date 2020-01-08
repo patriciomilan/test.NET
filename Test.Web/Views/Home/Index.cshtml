@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Razón</th>
+        </tr>
+    </thead>
+    <tbody id="contenidoTable">
+    </tbody>
+</table>
+
+
+<script id="filaTemplate" type="text/x-jQuery-tmpl">
+    <tr>
+        <td>${nombre}</td>
+        <td>${apellido}</td>
+        <td>${razonRegistro}</td>
+    </tr>
+</script>
+
+@section Scripts
+{
+    <environment names="Development">
+
+    </environment>
+    <environment names="Staging,Production">
+
+    </environment>
+
+    <script>
+    var app = {
+        urlBase: "@Url.Content("~/api/")"
+    }
+
+    $(document).ready(function () {
+        $.ajaxSetup({
+            cache: false
+        });
+        load();
+    });
+
+    function load() {
+        $.ajax({
+            url: app.urlBase + "PersonaView",
+            method: "GET",
+            contentType: "application/json",
+            success: function (resultado) {
+                $("#filaTemplate").tmpl(resultado.data).appendTo("#contenidoTable");
+            },
+            error: function (jqXHR, estado, error) {
+                console.error(error);
+            }
+        });
+    }
+    </script>
+}
